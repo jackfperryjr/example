@@ -1,0 +1,17 @@
+{
+    "name": "Example",
+    "short_name": "Example",
+    "description": "The most awesome starter app in the world",
+    "icons": [
+      {
+        "src": "/images/icons/Example.png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/images/icons/Example.png",
+        "sizes": "512x512"
+      }
+    ],
+    "display": "standalone",
+    "start_url": "/"
+  }
