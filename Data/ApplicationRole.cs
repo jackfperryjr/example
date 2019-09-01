@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
-using Example.Models;
 
 namespace Example.Data
 {
@@ -12,7 +11,7 @@ namespace Example.Data
         public static void CreateRoles(IServiceProvider serviceProvider, IConfiguration Configuration)
         {
             const string adminRoleName = "Admin";
-            string[] roleNames = { adminRoleName, "SuperUser", "User" };
+            string[] roleNames = { adminRoleName, "SuperUser", "User", "Banned" };
 
             foreach (string roleName in roleNames)
             {
@@ -32,36 +31,6 @@ namespace Example.Data
                 Task<IdentityResult> roleResult = roleManager.CreateAsync(new IdentityRole(roleName));
                 roleResult.Wait();
             }
-        }
-        
-        private static void AddUserToRole(IServiceProvider serviceProvider, string userEmail, string userPwd, string roleName)
-        {
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-            Task<ApplicationUser> checkAppUser = userManager.FindByEmailAsync(userEmail);
-            checkAppUser.Wait();
-
-            ApplicationUser appUser = checkAppUser.Result;
-
-            if (checkAppUser.Result == null)
-            {
-                ApplicationUser newUser = new ApplicationUser
-                {
-                    Email = userEmail,
-                    UserName = userEmail
-                };
-
-                Task<IdentityResult> taskCreateUser = userManager.CreateAsync(newUser, userPwd);
-                taskCreateUser.Wait();
-
-                if (taskCreateUser.Result.Succeeded)
-                {
-                    appUser = newUser;
-                }
-            }
-
-            Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(appUser, roleName);
-            newUserRole.Wait();
         }
     }
 }

@@ -1,0 +1,52 @@
+@model IEnumerable<Example.Models.MessageModel>
+@using Example.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Conversation";
+    var user = await UserManager.GetUserAsync(User);
+    var receiverId = "";
+    var senderId = "";
+}
+
+<h4>@ViewData["Title"]</h4>
+<form method="post" enctype="multipart/form-data">
+    <div class="row form-group">
+        <div class="col-md-6" style="margin: 0 auto;">
+            <ul id="contacts" class="container list-group" style="min-height: 200px; background-color: #f5f5f5;list-style-type: none;border-radius: 5px; padding: 0 15px;">                        
+                @foreach (var message in Model) 
+                {
+                    @if(@message.SenderId == @user.Id) 
+                    {
+                        <li style="display:inline-block;clear: both; margin: 2px;float:right;"><span class="float-right bg-primary text-white" style="width: auto;border-radius: 7px;padding: 1% 2%;">@message.Message</span></li>
+                    }
+                    else 
+                    {
+                        <li style="display:inline-block;clear: both;margin: 2px;"><span class="float-left bg-success text-white" style="width: auto;border-radius: 7px;padding: 1% 2%;">@message.Message</span></li>
+                    }
+                    receiverId = @message.ReceiverId;
+                    senderId = @message.SenderId;
+                }
+            </ul>
+        </div>
+    </div>
+
+</form>
+    @using(Html.BeginForm("SendMessage","Chat"))
+    {
+    <div class="row form-group">
+        @if (user.Id == @receiverId)
+        {
+            <input type="hidden" name="id" value="@senderId" />
+        }
+        else 
+        {
+            <input type="hidden" name="id" value="@receiverId" />
+        }
+        <div class="col-md-6" style="margin: 0 auto;">
+            <input name="content" class="form-group input-group" style="min-height:30px;height:auto;background-color: #f5f5f5;border-radius: 5px;border: transparent;" />
+            <button class="input-group-button btn btn-primary" style="width:100%;">Send</button>
+        </div>
+    </div>
+    }

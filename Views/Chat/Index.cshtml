@@ -1,0 +1,28 @@
+@model IEnumerable<Example.Models.ApplicationUser>
+@using Example.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Chat";
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<h4>@ViewData["Title"]</h4>
+<form method="post" enctype="multipart/form-data">
+    <div class="container">
+        <div class="panel-body">
+            <ul id="contacts" class="list-group">                        
+                @foreach (var users in Model) 
+                {
+                <a asp-action="Conversation" asp-route-id="@users.Id">
+                    <li>
+                        <span> <img src="@users.Picture" style="border-radius: 50%;width: 30px;height: 30px;"> @users.Email</span>
+                        <div class="status-bar"></div>
+                    </li>
+                </a>
+                }
+            </ul>
+        </div>
+    </div>
+</form>

@@ -10,5 +10,6 @@ namespace Example.Data
             : base(options)
         {
         }
+        public DbSet<MessageModel> Messages { get; set; }
     }
 }
